@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Détails de {{ produit.name }}</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="{{ path('app_home') }}">⬅️ Retour à l'accueil</a>
+        </nav>
+    </header>
+
+    <hr>
+
+    <div style="display: flex; gap: 40px; margin-top: 20px;">
+        <div>
+            <img src="{{ asset(produit.image) }}" alt="{{ produit.name }}" style="max-width: 300px; height: auto; border: 1px solid #ddd;">
+        </div>
+        <div>
+            <h1>{{ produit.name }}</h1>
+            <h2 style="color: green;">{{ produit.price }} €</h2>
+            <p>Cet article est disponible en stock et prêt à être expédié.</p>
+
+            <form action="{{ path('app_cart_add', {'id': produit.id}) }}" method="POST" style="margin-top: 15px;">
+    <label for="quantity">Quantité :</label>
+    <input type="number" id="quantity" name="quantity" value="1" min="1" style="width: 50px; padding: 5px; margin-right: 10px;">
+
+    <button type="submit" style="background: green; color: white; padding: 10px 20px; font-size: 16px; border: none; border-radius: 5px; cursor: pointer;">
+        🛒 Ajouter au panier
+    </button>
+</form>
+        </div>
+    </div>
+</body>
+</html>

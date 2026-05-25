@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion</title>
+</head>
+<body style="font-family: sans-serif; padding: 20px;">
+    <a href="{{ path('app_home') }}">⬅️ Retour Boutique</a>
+    <h1>Connexion</h1>
+
+    {% if error %}
+        <div style="color: red; margin-bottom: 15px;">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    <form action="{{ path('app_login') }}" method="POST">
+        <div style="margin-bottom: 15px;">
+            <label for="username">Email :</label><br>
+            <input type="email" id="username" name="_username" value="{{ last_username }}" required style="width: 250px; padding: 5px;">
+        </div>
+        <div style="margin-bottom: 15px;">
+            <label for="password">Mot de passe :</label><br>
+            <input type="password" id="password" name="_password" required style="width: 250px; padding: 5px;">
+        </div>
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+        <button type="submit" style="background: green; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+            Se connecter
+        </button>
+    </form>
+</body>
+</html>
