@@ -4,22 +4,19 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // Récupération de votre code depuis GitHub
                 checkout scm
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Construction du projet avec Maven...'
-                // Exécute Maven sur la machine hôte
+                // On appelle mvn directement (assurez-vous que maven est installé sur votre VM)
                 sh 'mvn clean package -DskipTests'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Lancement des tests...'
                 sh 'mvn test'
             }
         }
@@ -27,7 +24,8 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withCredentials([string(credentialsId: 'sonartoken', variable: 'SONAR_TOKEN')]) {
-                    // Analyse avec le conteneur sonar-scanner
+                    // Ici on utilise Docker car le scanner est une image spécifique,
+                    // mais comme vous êtes dans une VM, assurez-vous que docker est bien installé dessus.
                     sh '''
                     docker run --rm \
                     -v "${WORKSPACE}:/usr/src" \
