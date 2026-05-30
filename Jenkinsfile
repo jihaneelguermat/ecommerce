@@ -1,21 +1,33 @@
 pipeline {
-    // On utilise l'image officielle Maven pour tout le pipeline
-    agent {
-        docker {
-            image 'maven:3.8.6-openjdk-17'
-        }
-    }
+    agent any
+
     stages {
         stage('Checkout') {
             steps {
+                // Récupération de votre code depuis GitHub
                 checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                echo 'Construction du projet avec Maven...'
+                // Exécute Maven sur la machine hôte
+                sh 'mvn clean package -DskipTests'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                echo 'Lancement des tests...'
+                sh 'mvn test'
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
                 withCredentials([string(credentialsId: 'sonartoken', variable: 'SONAR_TOKEN')]) {
-                    // On exécute le scan via un conteneur éphémère
+                    // Analyse avec le conteneur sonar-scanner
                     sh '''
                     docker run --rm \
                     -v "${WORKSPACE}:/usr/src" \
@@ -26,19 +38,6 @@ pipeline {
                     -Dsonar.login=${SONAR_TOKEN}
                     '''
                 }
-            }
-        }
-
-        stage('Build') {
-            steps {
-                // Maintenant, 'mvn' est disponible grâce à l'image 'maven:3.8.6'
-                sh 'mvn clean package -DskipTests'
-            }
-        }
-
-        stage('Test') {
-            steps {
-                sh 'mvn test'
             }
         }
     }
